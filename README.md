@@ -39,6 +39,11 @@ bringyour preview --from claude-code --to codex
 bringyour migrate --from claude-code --to codex --policy merge
 ```
 
+Codex import validation pages:
+
+- https://bringyour.ai/codex-import-checklist
+- https://bringyour.ai/agents-md-claude-md
+
 Manual Codex-to-Codex sync:
 
 ```bash
@@ -51,9 +56,18 @@ bringyour sync apply --in ./bya-codex-sync --root ~/.codex
 
 The remote MCP server must not receive private harness data. Actual migration and sync work happens through the local CLI or local MCP server. The hosted endpoint exists for discovery, preview, and install handoff.
 
+## Public Codex Artifacts
+
+This repo also carries installable, no-secret public artifacts for auditing migrated Codex setups:
+
+- `skills/bringyour-migration-auditor/SKILL.md` - Codex skill for checking AGENTS.md/CLAUDE.md scope, hooks, MCP config, skills, secrets, and validation notes after a migration.
+- `agents/harness-migration-auditor.toml` - Codex subagent config for the same read-only audit path.
+
 ## Links
 
 - Site: https://bringyour.ai
 - Claude Code to Codex guide: https://bringyour.ai/claude-code-to-codex
+- Codex import checklist: https://bringyour.ai/codex-import-checklist
+- AGENTS.md vs CLAUDE.md guide: https://bringyour.ai/agents-md-claude-md
 - OpenAPI: https://bringyour.ai/openapi.yaml
 - llms.txt: https://bringyour.ai/llms.txt
