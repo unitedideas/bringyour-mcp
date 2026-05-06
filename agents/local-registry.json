@@ -1,0 +1,55 @@
+{
+  "business_slug": "bringyour-mcp",
+  "stage": "support",
+  "status": "proposed_for_review",
+  "agents": [
+    {
+      "id": "bringyour_mcp-operator",
+      "name": "bringyour-mcp Business Operator",
+      "kind": "operator",
+      "capabilities": [
+        "backlog_execution",
+        "state_updates",
+        "runbook_execution"
+      ],
+      "scope": "business:bringyour-mcp",
+      "definition_ref": "business://bringyour-mcp/agents/operator",
+      "expertise_ref": "business://bringyour-mcp/agent-memory/operator",
+      "owner": "bringyour-mcp",
+      "reuse_policy": "business_specific",
+      "private_safe": false
+    },
+    {
+      "id": "bringyour_mcp-business-researcher",
+      "name": "bringyour-mcp Business Researcher",
+      "kind": "business-researcher",
+      "capabilities": [
+        "market_research",
+        "competitor_tracking",
+        "customer_discovery"
+      ],
+      "scope": "business:bringyour-mcp",
+      "definition_ref": "business://bringyour-mcp/agents/business-researcher",
+      "expertise_ref": "business://bringyour-mcp/agent-memory/business-researcher",
+      "owner": "bringyour-mcp",
+      "reuse_policy": "business_specific",
+      "private_safe": false
+    },
+    {
+      "id": "bringyour_mcp-marketer",
+      "name": "bringyour-mcp Business Marketer",
+      "kind": "marketer",
+      "capabilities": [
+        "positioning",
+        "distribution_planning",
+        "campaign_execution"
+      ],
+      "scope": "business:bringyour-mcp",
+      "definition_ref": "business://bringyour-mcp/agents/marketer",
+      "expertise_ref": "business://bringyour-mcp/agent-memory/marketer",
+      "owner": "bringyour-mcp",
+      "reuse_policy": "business_specific",
+      "private_safe": false
+    }
+  ]
+}
