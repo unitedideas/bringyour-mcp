@@ -60,6 +60,7 @@ The remote MCP server must not receive private harness data. Actual migration an
 
 This repo also carries installable, no-secret public artifacts for auditing migrated Codex setups:
 
+- `.codex-plugin/plugin.json` - Codex plugin manifest that exposes the migration-auditor skill as an installable plugin.
 - `skills/bringyour-migration-auditor/SKILL.md` - Codex skill for checking AGENTS.md/CLAUDE.md scope, hooks, MCP config, skills, secrets, and validation notes after a migration.
 - `agents/harness-migration-auditor.toml` - Codex subagent config for the same read-only audit path.
 - `.github/workflows/agent-surface-proof.yml` - public CI proof that the hosted discovery, commerce, and MCP handoff surfaces stay callable without secrets.
