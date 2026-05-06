@@ -1,0 +1,42 @@
+name: Bring Your AI agent surface check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 15 * * 1"
+
+jobs:
+  check-bringyour:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check Bring Your AI discovery routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS https://bringyour.ai/llms.txt >/tmp/llms.txt
+          curl -fsS https://bringyour.ai/.well-known/mcp.json >/tmp/mcp.json
+          curl -fsS https://bringyour.ai/.well-known/agent.json >/tmp/agent.json
+          curl -fsS https://bringyour.ai/.well-known/commerce.json >/tmp/commerce.json
+          curl -fsS https://bringyour.ai/api/v1/catalog >/tmp/catalog.json
+
+          python3 - <<'PY'
+          import json
+          for path in ["/tmp/mcp.json", "/tmp/agent.json", "/tmp/commerce.json", "/tmp/catalog.json"]:
+              with open(path, "r", encoding="utf-8") as f:
+                  json.load(f)
+          with open("/tmp/catalog.json", "r", encoding="utf-8") as f:
+              catalog = json.load(f)
+          assert catalog["products"], "catalog has no products"
+          assert any(p["checkout"]["stripe_payment_link"] for p in catalog["products"]), "no Stripe Payment Link fallback declared"
+          PY
+
+      - name: Check remote MCP handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS https://bringyour.ai/mcp \
+            -H "content-type: application/json" \
+            -H "accept: application/json, text/event-stream" \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"bringyour-consumer-check","version":"1.0.0"}}}' \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["result"]["serverInfo"]["name"] == "bringyour"'

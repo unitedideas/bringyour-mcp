@@ -1,0 +1,49 @@
+name: Agent surface proof
+
+on:
+  push:
+  schedule:
+    - cron: "17 14 * * *"
+  workflow_dispatch:
+
+jobs:
+  verify-agent-surfaces:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify public discovery and commerce routes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for url in \
+            "https://bringyour.ai/llms.txt" \
+            "https://bringyour.ai/.well-known/mcp.json" \
+            "https://bringyour.ai/.well-known/agent.json" \
+            "https://bringyour.ai/.well-known/commerce.json" \
+            "https://bringyour.ai/api/v1/catalog" \
+            "https://bringyour.ai/openapi.yaml"; do
+            code="$(curl -fsS -o /tmp/route-body -w "%{http_code}" "$url")"
+            test "$code" = "200"
+            test -s /tmp/route-body
+          done
+
+      - name: Verify MCP initialize response
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          response="$(curl -fsS https://bringyour.ai/mcp \
+            -H "content-type: application/json" \
+            -H "accept: application/json, text/event-stream" \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"bringyour-agent-surface-proof","version":"1.0.0"}}}')"
+
+          printf "%s" "$response" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["result"]["serverInfo"]["name"] == "bringyour"'
+
+      - name: Verify structured catalog has buyable products
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl -fsS https://bringyour.ai/api/v1/catalog \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["products"]; assert any(p["checkout"]["stripe_payment_link"] for p in data["products"])'
