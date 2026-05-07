@@ -1,0 +1,67 @@
+name: Codex import audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 15 * * 1"
+
+jobs:
+  audit-codex-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify Bring Your AI agent surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for url in \
+            "https://bringyour.ai/codex-import-checklist" \
+            "https://bringyour.ai/agents-md-claude-md" \
+            "https://bringyour.ai/llms.txt" \
+            "https://bringyour.ai/.well-known/mcp.json" \
+            "https://bringyour.ai/.well-known/agent.json" \
+            "https://bringyour.ai/.well-known/commerce.json" \
+            "https://bringyour.ai/api/v1/catalog" \
+            "https://bringyour.ai/openapi.yaml"; do
+            code="$(curl -fsS -o /tmp/route-body -w "%{http_code}" "$url")"
+            test "$code" = "200"
+            test -s /tmp/route-body
+          done
+
+      - name: Verify MCP discovery handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          response="$(curl -fsS https://bringyour.ai/mcp \
+            -H "content-type: application/json" \
+            -H "accept: application/json, text/event-stream" \
+            --data '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}')"
+
+          printf "%s" "$response" | python3 -c 'import json, sys; data=json.load(sys.stdin); names={tool["name"] for tool in data["result"]["tools"]}; required={"preview_move", "preview_build_setup", "install_local_cli", "list_targets"}; missing=required-names; assert not missing, f"missing MCP tools: {sorted(missing)}"'
+
+      - name: Record target-side validation notes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > codex-import-validation-notes.md <<'EOF'
+          # Codex Import Validation Notes
+
+          Check these before allowing Codex to edit source after a Claude Code import:
+
+          - CLAUDE.md scope and AGENTS.md scope are not equivalent by default.
+          - Claude Code hooks and lifecycle rules should become validation notes unless Codex can enforce the same behavior.
+          - MCP config should preserve secret references, not copied secret values.
+          - Imported skills should keep their local assets and entrypoint instructions.
+          - Session artifacts should be reviewed before they become active instructions.
+
+          Bring Your AI routes:
+
+          - https://bringyour.ai/codex-import-checklist
+          - https://bringyour.ai/agents-md-claude-md
+          - https://bringyour.ai/claude-code-to-codex
+          EOF
+
+          test -s codex-import-validation-notes.md
