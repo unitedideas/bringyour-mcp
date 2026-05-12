@@ -1,0 +1,50 @@
+{
+  "schema": "https://bringyour.ai/schemas/codex-import-audit-report.v1.json",
+  "product": "Bring Your AI",
+  "purpose": "Example read-only audit record for a Claude Code to Codex import.",
+  "source_harness": "claude-code",
+  "target_harness": "codex",
+  "remote_boundary": {
+    "receives_private_files": false,
+    "receives_api_keys": false,
+    "receives_git_history": false,
+    "note": "The hosted MCP endpoint only returns install, preview, and checklist handoffs. Real migration runs locally."
+  },
+  "checks": [
+    {
+      "id": "agents_md_scope",
+      "status": "pass",
+      "summary": "AGENTS.md exists and documents repository-specific operating rules."
+    },
+    {
+      "id": "claude_md_import",
+      "status": "review",
+      "summary": "CLAUDE.md content was imported as source context and needs operator review before promotion to global Codex rules."
+    },
+    {
+      "id": "mcp_config",
+      "status": "pass",
+      "summary": "MCP server definitions were copied without secret values and require point-of-use credential checks."
+    },
+    {
+      "id": "hook_inventory",
+      "status": "review",
+      "summary": "Claude Code hooks were inventoried; Codex-compatible hooks should be installed only after reviewing command safety."
+    },
+    {
+      "id": "secret_material",
+      "status": "pass",
+      "summary": "No API keys, tokens, SSH private keys, or process environment dumps are present in the audit record."
+    }
+  ],
+  "next_actions": [
+    "Run the local Bring Your AI CLI from the source repository root.",
+    "Review imported CLAUDE.md rules before promoting them into AGENTS.md.",
+    "Run the Codex import audit workflow before allowing Codex to edit production code."
+  ],
+  "conversion_routes": {
+    "install": "https://bringyour.ai/install.sh",
+    "codex_import_checklist": "https://bringyour.ai/codex-import-checklist",
+    "checkout": "https://bringyour.ai/buy"
+  }
+}
