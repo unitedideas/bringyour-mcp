@@ -1,0 +1,50 @@
+{
+  "$schema": "https://bringyour.ai/schemas/mcp-config-migration.v1.json",
+  "id": "bringyour-public-mcp-config-migration-checklist",
+  "title": "Claude Code to Codex MCP config migration checklist",
+  "source": "https://bringyour.ai/mcp-config-migration.json",
+  "html": "https://bringyour.ai/mcp-config-migration",
+  "product": "Bring Your AI",
+  "remote_invariant": {
+    "harness_data_remote": false,
+    "notes": "Use this artifact as a public checklist only. Do not paste MCP configs, generated memories, API keys, GitHub handles, local paths, or file contents into the hosted Bring Your AI endpoint."
+  },
+  "checks": [
+    {
+      "id": "inventory_mcp_servers",
+      "question": "Did every MCP server get classified by transport, command or URL, environment references, wrapper dependencies, and target criticality?",
+      "blocked_if_false": true
+    },
+    {
+      "id": "preserve_indirect_secrets",
+      "question": "Did credential material stay behind environment, Keychain, 1Password, or vault references instead of becoming literal config values?",
+      "blocked_if_false": true
+    },
+    {
+      "id": "rewrite_source_only_paths",
+      "question": "Were source-machine absolute paths rewritten to target-valid wrappers or recorded as validation notes?",
+      "blocked_if_false": true
+    },
+    {
+      "id": "dry_run_critical_servers",
+      "question": "Did each critical MCP server pass tools/list or an equivalent lowest-risk discovery call after migration?",
+      "blocked_if_false": true
+    },
+    {
+      "id": "record_non_equivalent_behavior",
+      "question": "Were Claude Code hooks, launcher policy, and per-agent restrictions that Codex cannot enforce recorded as target-side validation notes?",
+      "blocked_if_false": true
+    }
+  ],
+  "local_commands": [
+    "bringyour preview --from claude-code --to codex",
+    "bringyour migrate --from claude-code --to codex --policy merge"
+  ],
+  "agent_readable_surfaces": {
+    "openapi": "https://bringyour.ai/openapi.yaml",
+    "agent_manifest": "https://bringyour.ai/.well-known/agent.json",
+    "commerce_manifest": "https://bringyour.ai/.well-known/commerce.json",
+    "catalog": "https://bringyour.ai/api/v1/catalog",
+    "mcp": "https://bringyour.ai/mcp"
+  }
+}

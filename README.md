@@ -66,6 +66,7 @@ This repo also carries installable, no-secret public artifacts for auditing migr
 - `.github/workflows/agent-surface-proof.yml` - public CI proof that the hosted discovery, commerce, and MCP handoff surfaces stay callable without secrets.
 - `examples/github-actions/bringyour-agent-surface-check.yml` - reusable workflow sample for teams that want a scheduled check before relying on Bring Your AI during a Claude Code to Codex move.
 - `examples/github-actions/codex-import-audit.yml` - reusable workflow sample for teams that want a Codex import audit record before allowing Codex to edit source after a Claude Code migration.
+- `examples/mcp-config-migration/checklist.json` - agent-readable MCP config migration checklist that preserves the no-data remote boundary.
 
 ## Links
 
@@ -73,5 +74,6 @@ This repo also carries installable, no-secret public artifacts for auditing migr
 - Claude Code to Codex guide: https://bringyour.ai/claude-code-to-codex
 - Codex import checklist: https://bringyour.ai/codex-import-checklist
 - AGENTS.md vs CLAUDE.md guide: https://bringyour.ai/agents-md-claude-md
+- MCP config migration checklist: https://bringyour.ai/mcp-config-migration.json
 - OpenAPI: https://bringyour.ai/openapi.yaml
 - llms.txt: https://bringyour.ai/llms.txt
