@@ -79,7 +79,7 @@ This repo also carries installable, no-secret public artifacts for auditing migr
 - `skills/bringyour-migration-auditor/SKILL.md` - Codex skill for checking AGENTS.md/CLAUDE.md scope, hooks, MCP config, skills, secrets, and validation notes after a migration.
 - `agents/harness-migration-auditor.toml` - Codex subagent config for the same read-only audit path.
 - `.github/workflows/agent-surface-proof.yml` - public CI proof that the hosted discovery, commerce, and MCP handoff surfaces stay callable without secrets.
-- `examples/github-actions/bringyour-agent-surface-check.yml` - reusable workflow sample for teams that want a scheduled check before relying on Bring Your AI during a Claude Code to Codex move.
+- `examples/github-actions/bringyour-agent-surface-check.yml` - reusable workflow sample for teams that want a scheduled discovery, MCP, quote, and checkout handoff check before relying on Bring Your AI during a Claude Code to Codex move.
 - `examples/github-actions/codex-import-audit.yml` - reusable workflow sample for teams that want a Codex import audit record before allowing Codex to edit source after a Claude Code migration.
 - `examples/codex-import-audit/sample-report.json` - machine-readable example audit report for Claude Code to Codex import review.
 - `examples/mcp-config-migration/checklist.json` - agent-readable MCP config migration checklist that preserves the no-data remote boundary.

@@ -40,3 +40,18 @@ jobs:
             -H "accept: application/json, text/event-stream" \
             --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"bringyour-consumer-check","version":"1.0.0"}}}' \
             | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["result"]["serverInfo"]["name"] == "bringyour"'
+
+      - name: Check executable quote and checkout handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl -fsS https://bringyour.ai/api/v1/quote \
+            -H "content-type: application/json" \
+            --data '{"product_id":"bringyour_lifetime"}' \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["product_id"] == "bringyour_lifetime"; assert data["display_price"] == "$49.00"; assert data["total_minor"] == 4900'
+
+          curl -fsS https://bringyour.ai/api/v1/checkout \
+            -H "content-type: application/json" \
+            --data '{"product_id":"bringyour_lifetime","customer_email":"agent-proof@example.invalid"}' \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["status"] == "requires_customer_action"; assert data["payment_mode"] == "stripe_payment_link"; assert data["checkout_url"].startswith("https://buy.stripe.com/"); assert data["entitlement_after"] == "signed_license_email"'
