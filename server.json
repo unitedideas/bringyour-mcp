@@ -3,7 +3,7 @@
   "name": "ai.bringyour/bringyour",
   "title": "Bring Your AI",
   "description": "No-data MCP handoff for local Claude Code to Codex harness moves.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "websiteUrl": "https://bringyour.ai",
   "remotes": [
     {
@@ -27,6 +27,18 @@
     {
       "name": "list_targets",
       "description": "List supported source and destination agent harnesses."
+    },
+    {
+      "name": "list_products",
+      "description": "List buyable local CLI products and checkout routes without receiving harness files."
+    },
+    {
+      "name": "quote_lifetime_license",
+      "description": "Return a deterministic quote for the lifetime license without receiving harness files."
+    },
+    {
+      "name": "start_checkout",
+      "description": "Start the Stripe-hosted checkout handoff for a selected license tier."
     }
   ]
 }

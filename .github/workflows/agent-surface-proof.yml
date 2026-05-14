@@ -22,6 +22,8 @@ jobs:
             "https://bringyour.ai/.well-known/agent.json" \
             "https://bringyour.ai/.well-known/commerce.json" \
             "https://bringyour.ai/api/v1/catalog" \
+            "https://bringyour.ai/agent-buying-guide.json" \
+            "https://bringyour.ai/pricing.json" \
             "https://bringyour.ai/openapi.yaml"; do
             code="$(curl -fsS -o /tmp/route-body -w "%{http_code}" "$url")"
             test "$code" = "200"
@@ -47,3 +49,14 @@ jobs:
 
           curl -fsS https://bringyour.ai/api/v1/catalog \
             | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["products"]; assert any(p["checkout"]["stripe_payment_link"] for p in data["products"])'
+
+      - name: Verify agent-readable buying contract
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl -fsS https://bringyour.ai/agent-buying-guide.json \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["remote_invariant"]["harness_data_remote"] is False; assert data["live_routes"]["checkout_payment_link"]["url"] == "https://bringyour.ai/api/v1/checkout"'
+
+          curl -fsS https://bringyour.ai/pricing.json \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["remote_invariant"]["accepts_file_contents"] is False; assert data["checkout"]["checkout"] == "https://bringyour.ai/api/v1/checkout"'
