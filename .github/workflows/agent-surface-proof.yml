@@ -50,6 +50,21 @@ jobs:
           curl -fsS https://bringyour.ai/api/v1/catalog \
             | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["products"]; assert any(p["checkout"]["stripe_payment_link"] for p in data["products"])'
 
+      - name: Verify executable quote and checkout handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl -fsS https://bringyour.ai/api/v1/quote \
+            -H "content-type: application/json" \
+            --data '{"product_id":"bringyour_lifetime"}' \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["product_id"] == "bringyour_lifetime"; assert data["display_price"] == "$49.00"; assert data["total_minor"] == 4900; assert data["remote_invariant"]["accepts_file_contents"] is False if "remote_invariant" in data else True'
+
+          curl -fsS https://bringyour.ai/api/v1/checkout \
+            -H "content-type: application/json" \
+            --data '{"product_id":"bringyour_lifetime","customer_email":"agent-proof@example.invalid"}' \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["status"] == "requires_customer_action"; assert data["payment_mode"] == "stripe_payment_link"; assert data["checkout_url"].startswith("https://buy.stripe.com/"); assert data["entitlement_after"] == "signed_license_email"'
+
       - name: Verify agent-readable buying contract
         shell: bash
         run: |
