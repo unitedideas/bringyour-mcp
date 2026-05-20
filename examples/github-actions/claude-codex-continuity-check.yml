@@ -1,0 +1,82 @@
+name: Claude Code to Codex continuity check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - ".claude/**"
+      - ".codex/**"
+      - ".mcp.json"
+      - "mcp.json"
+
+jobs:
+  check-continuity-surfaces:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inventory local harness files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p agent-continuity
+          {
+            echo "# Claude Code to Codex continuity inventory"
+            echo
+            echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo
+            for path in AGENTS.md CLAUDE.md .claude .codex .mcp.json mcp.json; do
+              if [ -e "$path" ]; then
+                echo "- present: $path"
+              else
+                echo "- missing: $path"
+              fi
+            done
+          } > agent-continuity/inventory.md
+
+          test -s agent-continuity/inventory.md
+
+      - name: Verify Bring Your AI no-data discovery contract
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl -fsS https://bringyour.ai/.well-known/agent.json \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["remote_invariant"]["harness_data_remote"] is False; assert data["remote_invariant"]["accepts_file_contents"] is False'
+
+          curl -fsS https://bringyour.ai/codex-import-checklist.json \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["remote_invariant"]["harness_data_remote"] is False; assert "checks" in data'
+
+      - name: Write target-side validation notes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > agent-continuity/codex-validation-notes.md <<'EOF'
+          # Codex Validation Notes
+
+          Use the built-in Codex import first when available. Before Codex edits source, review these non-equivalent surfaces:
+
+          - Claude Code hooks and lifecycle rules.
+          - Per-agent restrictions or tool allowlists that Codex cannot enforce the same way.
+          - MCP config that references secrets or local credential helpers.
+          - Session artifacts that are useful as continuity notes but unsafe as active instructions.
+          - Generated memories, caches, and logs that should not become AGENTS.md rules.
+
+          Bring Your AI reference:
+
+          - https://bringyour.ai/codex-import-checklist
+          - https://bringyour.ai/agents-md-claude-md
+          - https://bringyour.ai/claude-code-to-codex
+          EOF
+
+          test -s agent-continuity/codex-validation-notes.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-continuity
+          path: agent-continuity/

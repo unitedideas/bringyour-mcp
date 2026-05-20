@@ -87,6 +87,7 @@ This repo also carries installable, no-secret public artifacts for auditing migr
 - `.github/workflows/agent-surface-proof.yml` - public CI proof that the hosted discovery, commerce, and MCP handoff surfaces stay callable without secrets.
 - `examples/github-actions/bringyour-agent-surface-check.yml` - reusable workflow sample for teams that want a scheduled discovery, MCP, quote, and checkout handoff check before relying on Bring Your AI during a Claude Code to Codex move.
 - `examples/github-actions/codex-import-audit.yml` - reusable workflow sample for teams that want a Codex import audit record before allowing Codex to edit source after a Claude Code migration.
+- `examples/github-actions/claude-codex-continuity-check.yml` - pull-request workflow sample that inventories AGENTS.md, CLAUDE.md, .claude, .codex, and MCP config changes, then writes Codex validation notes before source edits.
 - `examples/agent-discovery/*.json` - no-secret payload examples for MCP tools/list, quote, and checkout smoke checks.
 - `examples/codex-import-audit/sample-report.json` - machine-readable example audit report for Claude Code to Codex import review.
 - `examples/mcp-config-migration/checklist.json` - agent-readable MCP config migration checklist that preserves the no-data remote boundary.
