@@ -1,0 +1,82 @@
+name: MCP config migration check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".mcp.json"
+      - "mcp.json"
+      - ".claude/**"
+      - ".codex/**"
+      - "AGENTS.md"
+      - "CLAUDE.md"
+
+jobs:
+  check-mcp-config-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inventory MCP config surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p mcp-config-migration
+          {
+            echo "# MCP Config Migration Inventory"
+            echo
+            echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo
+            for path in .mcp.json mcp.json .claude .codex AGENTS.md CLAUDE.md; do
+              if [ -e "$path" ]; then
+                echo "- present: $path"
+              else
+                echo "- missing: $path"
+              fi
+            done
+          } > mcp-config-migration/inventory.md
+
+          test -s mcp-config-migration/inventory.md
+
+      - name: Verify Bring Your AI public MCP checklist
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl -fsS https://bringyour.ai/mcp-config-migration.json \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["remote_invariant"]["harness_data_remote"] is False; assert len(data["checks"]) >= 5'
+
+          curl -fsS https://bringyour.ai/.well-known/agent.json \
+            | python3 -c 'import json,sys; data=json.load(sys.stdin); invariant=data["remote_invariant"]; assert invariant["harness_data_remote"] is False; assert invariant["accepts_file_contents"] is False'
+
+      - name: Write target-side MCP validation notes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > mcp-config-migration/validation-notes.md <<'EOF'
+          # MCP Config Migration Validation Notes
+
+          Review these before trusting a Claude Code to Codex MCP config move:
+
+          - Secret material should stay behind env, Keychain, 1Password, or vault references.
+          - Source-machine absolute paths should be rewritten to target-valid wrappers or recorded as blockers.
+          - Critical MCP servers should pass tools/list or an equivalent no-write discovery call.
+          - Claude Code hooks, launcher policy, and per-agent restrictions should become Codex validation notes when they cannot be enforced directly.
+          - Session files, generated memories, and logs should not be promoted into active instructions without review.
+
+          Bring Your AI reference:
+
+          - https://bringyour.ai/mcp-config-migration
+          - https://bringyour.ai/mcp-config-migration.json
+          - https://bringyour.ai/codex-import-checklist
+          EOF
+
+          test -s mcp-config-migration/validation-notes.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mcp-config-migration
+          path: mcp-config-migration/
