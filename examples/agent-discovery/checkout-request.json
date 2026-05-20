@@ -1,0 +1,12 @@
+{
+  "product_id": "bringyour_lifetime_founding",
+  "quantity": 1,
+  "currency": "usd",
+  "success_url": "https://example.com/bringyour/success",
+  "cancel_url": "https://example.com/bringyour/cancel",
+  "metadata": {
+    "source_harness": "claude-code",
+    "target_harness": "codex",
+    "workflow": "codex-import-audit"
+  }
+}

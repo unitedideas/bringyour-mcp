@@ -1,0 +1,11 @@
+{
+  "product_id": "bringyour_lifetime_founding",
+  "quantity": 1,
+  "currency": "usd",
+  "buyer_context": {
+    "use_case": "validate a Claude Code to Codex harness move before Codex edits source",
+    "source_harness": "claude-code",
+    "target_harness": "codex",
+    "requires_no_data_remote": true
+  }
+}
