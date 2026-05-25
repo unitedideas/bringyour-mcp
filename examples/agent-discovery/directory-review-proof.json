@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "product": "Bring Your AI",
+  "homepage": "https://bringyour.ai",
+  "purpose": "Directory and agent-buyer proof that Bring Your AI is discoverable, callable, verifiable, and buyable without receiving private harness data.",
+  "remote_invariant": {
+    "harness_data_remote": false,
+    "accepts_file_contents": false,
+    "accepts_api_keys": false,
+    "accepts_github_handles": false,
+    "accepts_generated_memories": false
+  },
+  "discovery_routes": {
+    "llms": "https://bringyour.ai/llms.txt",
+    "openapi": "https://bringyour.ai/openapi.yaml",
+    "mcp_manifest": "https://bringyour.ai/.well-known/mcp.json",
+    "agent_manifest": "https://bringyour.ai/.well-known/agent.json",
+    "commerce_manifest": "https://bringyour.ai/.well-known/commerce.json",
+    "catalog": "https://bringyour.ai/api/v1/catalog",
+    "pricing": "https://bringyour.ai/pricing.json",
+    "agent_buying_guide": "https://bringyour.ai/agent-buying-guide.json"
+  },
+  "mcp": {
+    "endpoint": "https://bringyour.ai/mcp",
+    "transport": "streamable-http",
+    "registry_name": "ai.bringyour/bringyour",
+    "no_data_tools": [
+      "preview_move",
+      "preview_build_setup",
+      "install_local_cli",
+      "list_targets",
+      "list_products",
+      "quote_lifetime_license",
+      "start_checkout"
+    ]
+  },
+  "buyable_products": [
+    {
+      "id": "bringyour_founder_lifetime",
+      "display_price": "$19.00",
+      "checkout_modes": [
+        "stripe_payment_link",
+        "stripe_link",
+        "stripe_checkout",
+        "stripe_spt"
+      ]
+    },
+    {
+      "id": "bringyour_early_lifetime",
+      "display_price": "$29.00",
+      "checkout_modes": [
+        "stripe_payment_link",
+        "stripe_link",
+        "stripe_checkout",
+        "stripe_spt"
+      ]
+    },
+    {
+      "id": "bringyour_lifetime",
+      "display_price": "$49.00",
+      "checkout_modes": [
+        "stripe_payment_link",
+        "stripe_link",
+        "stripe_checkout",
+        "stripe_spt"
+      ]
+    }
+  ],
+  "verification": {
+    "github_action": "https://github.com/unitedideas/bringyour-mcp/actions/workflows/agent-surface-proof.yml",
+    "workflow_file": ".github/workflows/agent-surface-proof.yml",
+    "sample_workflow": "examples/github-actions/bringyour-agent-surface-check.yml",
+    "sample_payloads": [
+      "examples/agent-discovery/mcp-tools-call.json",
+      "examples/agent-discovery/quote-request.json",
+      "examples/agent-discovery/checkout-request.json"
+    ]
+  },
+  "directory_submission_copy": {
+    "name": "Bring Your AI",
+    "category": "Agent infrastructure, MCP server, Claude Code, Codex",
+    "one_liner": "Local-first Claude Code to Codex harness mover with a no-data remote MCP discovery surface.",
+    "description": "Bring Your AI moves operating context between agent harnesses, starting with Claude Code to Codex. The paid CLI runs locally; the hosted MCP endpoint only exposes preview, target-listing, quote, checkout handoff, and install-command tools. It does not accept harness files, generated memories, project files, API keys, GitHub handles, or file contents."
+  }
+}

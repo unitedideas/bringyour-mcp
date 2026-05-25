@@ -63,6 +63,7 @@ Agent-readable buying surfaces:
 
 No-secret smoke payloads for agent buyers and directory reviewers:
 
+- `examples/agent-discovery/directory-review-proof.json` - single machine-readable proof bundle for directory reviewers and agent buyers.
 - `examples/agent-discovery/mcp-tools-call.json` - JSON-RPC tools/list payload for the no-data remote MCP endpoint.
 - `examples/agent-discovery/quote-request.json` - quote request shape for the local CLI lifetime license.
 - `examples/agent-discovery/checkout-request.json` - checkout handoff request shape with placeholder return URLs.
@@ -91,7 +92,7 @@ This repo also carries installable, no-secret public artifacts for auditing migr
 - `examples/github-actions/codex-import-audit.yml` - reusable workflow sample for teams that want a Codex import audit record before allowing Codex to edit source after a Claude Code migration.
 - `examples/github-actions/claude-codex-continuity-check.yml` - pull-request workflow sample that inventories AGENTS.md, CLAUDE.md, .claude, .codex, and MCP config changes, then writes Codex validation notes before source edits.
 - `examples/github-actions/mcp-config-migration-check.yml` - pull-request workflow sample that inventories MCP config surfaces, verifies the public no-data checklist, and writes target-side MCP validation notes.
-- `examples/agent-discovery/*.json` - no-secret payload examples for MCP tools/list, quote, and checkout smoke checks.
+- `examples/agent-discovery/*.json` - no-secret proof and payload examples for directory review, MCP tools/list, quote, and checkout smoke checks.
 - `examples/codex-import-audit/sample-report.json` - machine-readable example audit report for Claude Code to Codex import review.
 - `examples/mcp-config-migration/checklist.json` - agent-readable MCP config migration checklist that preserves the no-data remote boundary.
 
