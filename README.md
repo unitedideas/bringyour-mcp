@@ -2,6 +2,8 @@
 
 Public metadata repository for the Bring Your AI remote MCP server.
 
+[![Agent surface proof](https://github.com/unitedideas/bringyour-mcp/actions/workflows/agent-surface-proof.yml/badge.svg)](https://github.com/unitedideas/bringyour-mcp/actions/workflows/agent-surface-proof.yml)
+
 Bring Your AI moves agent-harness context between tools, starting with Claude Code to Codex. The paid CLI runs locally on the user's machine. This hosted MCP endpoint is intentionally no-data: it only exposes preview, target-listing, and install-command tools. It does not accept harness files, generated memories, project files, API keys, GitHub handles, or file contents.
 
 ## Endpoint
@@ -92,6 +94,8 @@ This repo also carries installable, no-secret public artifacts for auditing migr
 - `examples/agent-discovery/*.json` - no-secret payload examples for MCP tools/list, quote, and checkout smoke checks.
 - `examples/codex-import-audit/sample-report.json` - machine-readable example audit report for Claude Code to Codex import review.
 - `examples/mcp-config-migration/checklist.json` - agent-readable MCP config migration checklist that preserves the no-data remote boundary.
+
+Directory reviewers can use the latest `agent-surface-proof` workflow run as public evidence that the MCP endpoint, agent manifests, commerce surfaces, quote endpoint, and checkout handoff are live without receiving private harness data.
 
 ## Links
 
