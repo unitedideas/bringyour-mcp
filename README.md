@@ -26,6 +26,8 @@ Manifest:
 https://bringyour.ai/.well-known/mcp.json
 ```
 
+Glama connector: https://glama.ai/mcp/connectors/ai.bringyour/bringyour
+
 ## Tools
 
 - `preview_move` - Preview supported source and destination harness moves without receiving user files.
