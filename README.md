@@ -41,6 +41,11 @@ https://bringyour.ai/.well-known/mcp.json
 ```bash
 curl -fsSL https://bringyour.ai/install.sh | sh
 bringyour preview --from claude-code --to codex
+```
+
+Running `migrate` requires a paid local CLI license. See [current pricing](https://bringyour.ai/pricing) for the lifetime licenses and Team Migration Pack.
+
+```bash
 bringyour migrate --from claude-code --to codex --policy merge
 ```
 
